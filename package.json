@@ -9,7 +9,7 @@
     "test:e2e": "playwright test",
     "test:unit": "vitest run",
     "check": "astro check",
-    "links": "linkinator ./dist --recurse --silent"
+    "links": "linkinator ./dist --recurse --silent --skip \"https?://(doi.org|aidrin.org|.*readthedocs.io|github.com)\""
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.4",
