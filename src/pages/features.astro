@@ -7,7 +7,7 @@ import { workflowSteps } from "../data/workflow.ts";
 import { dimensions } from "../data/dimensions.ts";
 ---
 <BaseLayout title="Features — AIDRIN" description="What AIDRIN evaluates: the inspect–remediate–transform workflow and six readiness dimensions.">
-  <Section eyebrow="What it does" heading="The AIDRIN workflow">
+  <Section eyebrow="What it does" heading="The AIDRIN workflow" headingLevel={1}>
     <div class="grid gap-6 md:grid-cols-3" data-testid="workflow">
       {workflowSteps.map(w => <Card title={w.step}><p class="opacity-80">{w.blurb}</p></Card>)}
     </div>

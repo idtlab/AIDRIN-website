@@ -7,7 +7,7 @@ import { accessModes } from "../data/access-modes.ts";
 import { integrations } from "../data/integrations.ts";
 ---
 <BaseLayout title="Integrations — AIDRIN" description="How you integrate AIDRIN: library, CLI, MCP, Globus, LLM explanations, agentic evaluation, custom metrics, OpenTelemetry, and APPFL.">
-  <Section eyebrow="Access modes" heading="Six ways to run AIDRIN">
+  <Section eyebrow="Access modes" heading="Six ways to run AIDRIN" headingLevel={1}>
     <div class="grid gap-6 md:grid-cols-3" data-testid="access-modes">
       {accessModes.map(m => <Card title={m.name}><p class="opacity-80">{m.blurb}</p></Card>)}
     </div>

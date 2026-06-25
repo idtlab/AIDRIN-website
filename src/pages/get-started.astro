@@ -5,7 +5,7 @@ import CodeTabs from "../components/CodeTabs.astro";
 import { site } from "../data/site.ts";
 ---
 <BaseLayout title="Get Started — AIDRIN" description="Install AIDRIN from source or PyPI, or use the hosted inspector.">
-  <Section eyebrow="Install" heading="Choose how to run AIDRIN">
+  <Section eyebrow="Install" heading="Choose how to run AIDRIN" headingLevel={1}>
     <CodeTabs tabs={[
       {label:"PyPI", code:"pip install aidrin\npython -c \"import aidrin; print(aidrin.__version__)\"", lang:"bash"},
       {label:"From source", code:"git clone https://github.com/idtlab/AIDRIN.git\ncd AIDRIN\nconda create -n aidrin-env python=3.10 -y\nconda activate aidrin-env\npython -m pip install -e .", lang:"bash"},

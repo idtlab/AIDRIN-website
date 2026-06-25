@@ -6,16 +6,19 @@ const pubs = (await getCollection("publications")).sort((a,b)=>b.data.year-a.dat
 function link(d: {doi?: string; arxiv?: string; url?: string}){ if(d.doi) return `https://doi.org/${d.doi}`; if(d.arxiv) return `https://arxiv.org/abs/${d.arxiv}`; return d.url; }
 ---
 <BaseLayout title="Publications — AIDRIN" description="Peer-reviewed publications behind AIDRIN, 2024–2025.">
-  <Section eyebrow="Research" heading="Publications">
+  <Section eyebrow="Research" heading="Publications" headingLevel={1}>
     <ul class="space-y-6" data-testid="pub-list">
-      {pubs.map(p => (
-        <li class="border-b pb-4">
-          <p class="font-semibold">{p.data.title}</p>
-          <p class="opacity-70 text-sm">{p.data.authors}</p>
-          <p class="opacity-70 text-sm">{p.data.venue}, {p.data.year}</p>
-          {link(p.data) && <a class="underline text-sm" href={link(p.data)}>Read →</a>}
-        </li>
-      ))}
+      {pubs.map(p => {
+        const href = link(p.data);
+        return (
+          <li class="border-b pb-4">
+            <p class="font-semibold">{p.data.title}</p>
+            <p class="opacity-70 text-sm">{p.data.authors}</p>
+            <p class="opacity-70 text-sm">{p.data.venue}, {p.data.year}</p>
+            {href && <a class="underline text-sm" href={href}>Read →</a>}
+          </li>
+        );
+      })}
     </ul>
   </Section>
 </BaseLayout>
