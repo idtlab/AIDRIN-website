@@ -1,0 +1,19 @@
+---
+import { site } from "../data/site.ts";
+import { navLinks } from "../data/nav.ts";
+---
+<footer class="border-t mt-24 px-6 py-12 max-w-7xl mx-auto text-sm">
+  <div class="grid gap-8 md:grid-cols-3">
+    <div><span class="font-display text-gradient text-xl">AIDRIN</span><p class="opacity-70 mt-2">AI Data Readiness Inspector</p></div>
+    <div><h3 class="font-semibold mb-2">Resources</h3>
+      {navLinks.map(l => <a class="block opacity-70 hover:opacity-100" href={l.href}>{l.label}</a>)}
+      <a class="block opacity-70 hover:opacity-100" href={site.docs}>Documentation</a>
+    </div>
+    <div><h3 class="font-semibold mb-2">Connect</h3>
+      <a class="block opacity-70 hover:opacity-100" href={site.github}>GitHub</a>
+      <a class="block opacity-70 hover:opacity-100" href={site.inspector}>Launch Inspector</a>
+    </div>
+  </div>
+  <p class="opacity-60 mt-8">{/* TODO: confirm exact funding text */}Supported in part by the U.S. National Science Foundation and collaborating institutions.</p>
+  <p class="opacity-60 mt-1">© {new Date().getFullYear()} AIDRIN. Open source on GitHub.</p>
+</footer>

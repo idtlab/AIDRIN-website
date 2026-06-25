@@ -1,0 +1,25 @@
+---
+import { navLinks } from "../data/nav.ts";
+import { site } from "../data/site.ts";
+---
+<header class="flex items-center justify-between px-6 py-4 max-w-7xl mx-auto">
+  <a href="/" class="font-display font-bold text-2xl text-gradient">AIDRIN</a>
+  <nav class="hidden md:flex items-center gap-6" aria-label="Primary">
+    {navLinks.map(l => <a href={l.href} class="hover:opacity-70">{l.label}</a>)}
+    <a href={site.docs} aria-label="Documentation" class="opacity-70 hover:opacity-100">Docs↗</a>
+    <a href={site.github} aria-label="GitHub repository" class="opacity-70 hover:opacity-100">GitHub↗</a>
+    <a href={site.inspector} class="btn-primary" data-testid="cta-primary">Launch Inspector</a>
+  </nav>
+  <button id="nav-toggle" class="md:hidden" aria-label="Open menu" aria-expanded="false">☰</button>
+</header>
+<nav id="mobile-menu" class="md:hidden hidden flex-col gap-4 px-6 pb-4" aria-label="Mobile">
+  {navLinks.map(l => <a href={l.href}>{l.label}</a>)}
+  <a href={site.inspector} class="btn-primary">Launch Inspector</a>
+</nav>
+<script is:inline>
+  const b = document.getElementById("nav-toggle"), m = document.getElementById("mobile-menu");
+  b?.addEventListener("click", () => {
+    const open = m.classList.toggle("hidden") === false;
+    m.classList.toggle("flex", open); b.setAttribute("aria-expanded", String(open));
+  });
+</script>
