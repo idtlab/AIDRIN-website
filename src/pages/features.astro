@@ -1,0 +1,23 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Section from "../components/Section.astro";
+import Card from "../components/Card.astro";
+import FormatChips from "../components/FormatChips.astro";
+import { workflowSteps } from "../data/workflow.ts";
+import { dimensions } from "../data/dimensions.ts";
+---
+<BaseLayout title="Features — AIDRIN" description="What AIDRIN evaluates: the inspect–remediate–transform workflow and six readiness dimensions.">
+  <Section eyebrow="What it does" heading="The AIDRIN workflow">
+    <div class="grid gap-6 md:grid-cols-3" data-testid="workflow">
+      {workflowSteps.map(w => <Card title={w.step}><p class="opacity-80">{w.blurb}</p></Card>)}
+    </div>
+  </Section>
+  <Section eyebrow="What it measures" heading="Six readiness dimensions">
+    <div class="grid gap-6 md:grid-cols-2" data-testid="dimensions">
+      {dimensions.map(d => <Card title={d.title}><p class="opacity-80">{d.blurb}</p></Card>)}
+    </div>
+  </Section>
+  <Section eyebrow="Inputs" heading="Supported formats">
+    <FormatChips />
+  </Section>
+</BaseLayout>
