@@ -7,4 +7,9 @@ for (const path of ['/', '/features', '/integrations', '/get-started', '/publica
     const serious = results.violations.filter(v => ['serious','critical'].includes(v.impact ?? ''));
     expect(serious, JSON.stringify(serious.map(v=>v.id))).toEqual([]);
   });
+  test(`has exactly one main landmark and at least one h1 on ${path}`, async ({ page }) => {
+    await page.goto(path);
+    await expect(page.locator('main')).toHaveCount(1);
+    await expect(page.locator('h1').first()).toBeVisible();
+  });
 }
