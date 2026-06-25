@@ -1,9 +1,10 @@
 ---
-interface Props { id?: string; eyebrow?: string; heading: string; }
-const { id, eyebrow, heading } = Astro.props;
+interface Props { id?: string; eyebrow?: string; heading: string; headingLevel?: 1 | 2; }
+const { id, eyebrow, heading, headingLevel = 2 } = Astro.props;
+const Tag = `h${headingLevel}` as 'h1' | 'h2';
 ---
 <section id={id} class="max-w-7xl mx-auto px-6 py-16">
   {eyebrow && <p class="font-display uppercase tracking-widest text-sm opacity-70">{eyebrow}</p>}
-  <h2 class="font-display font-bold text-3xl md:text-4xl mb-8">{heading}</h2>
+  <Tag class="font-display font-bold text-3xl md:text-4xl mb-8">{heading}</Tag>
   <slot />
 </section>

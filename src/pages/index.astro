@@ -42,7 +42,7 @@ const pubs = (await getCollection("publications")).sort((a,b)=>b.data.year-a.dat
       {accessModes.map(m => (
         <Card title={m.name} accent={m.agentic}>
           <p class="opacity-80">{m.blurb}</p>
-          {m.agentic && <p class="mt-2 text-sm text-gradient font-semibold">Agent-ready</p>}
+          {m.agentic && <span class="mt-2 inline-block text-xs font-semibold rounded-full border px-2 py-0.5">Agent-ready</span>}
         </Card>
       ))}
     </div>
