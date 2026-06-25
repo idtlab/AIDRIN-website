@@ -1,6 +1,85 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
+import Section from "../components/Section.astro";
+import Card from "../components/Card.astro";
+import FormatChips from "../components/FormatChips.astro";
+import CodeTabs from "../components/CodeTabs.astro";
+import { site } from "../data/site.ts";
+import { dimensions } from "../data/dimensions.ts";
+import { workflowSteps } from "../data/workflow.ts";
+import { accessModes } from "../data/access-modes.ts";
+import { getCollection } from "astro:content";
+const pubs = (await getCollection("publications")).sort((a,b)=>b.data.year-a.data.year).slice(0,3);
 ---
-<BaseLayout title="AIDRIN — AI Data Readiness Inspector" description="Is your data ready for AI?">
-  <main><h1 class="font-display text-gradient" data-testid="placeholder">AIDRIN</h1></main>
+<BaseLayout title="AIDRIN — AI Data Readiness Inspector" description="AIDRIN quantitatively assesses and improves your dataset's readiness for AI/ML.">
+  <!-- 1. Hero -->
+  <section class="max-w-7xl mx-auto px-6 pt-16 pb-24 text-center" data-testid="hero">
+    <h1 class="font-display font-bold text-5xl md:text-7xl text-gradient">Is your data ready for AI?</h1>
+    <p class="mt-6 text-lg md:text-xl max-w-2xl mx-auto opacity-80">AIDRIN quantitatively assesses and improves your dataset's readiness for AI and machine learning.</p>
+    <div class="mt-8 flex justify-center gap-4">
+      <a href={site.inspector} class="btn-primary">Launch Inspector</a>
+      <a href="/get-started" class="btn-secondary">Get Started</a>
+    </div>
+  </section>
+
+  <!-- 2. What is AIDRIN + workflow -->
+  <Section eyebrow="Workflow" heading="Inspect. Remediate. Transform.">
+    <div class="grid gap-6 md:grid-cols-3" data-testid="workflow">
+      {workflowSteps.map(w => <Card title={w.step}><p class="opacity-80">{w.blurb}</p></Card>)}
+    </div>
+  </Section>
+
+  <!-- 3. Six dimensions -->
+  <Section eyebrow="Assessment" heading="Six readiness dimensions">
+    <div class="grid gap-6 md:grid-cols-3" data-testid="dimensions">
+      {dimensions.map(d => <Card title={d.title}><p class="opacity-80">{d.blurb}</p></Card>)}
+    </div>
+  </Section>
+
+  <!-- 4. How you use it -->
+  <Section eyebrow="Access" heading="Use AIDRIN your way">
+    <div class="grid gap-6 md:grid-cols-3" data-testid="access-modes">
+      {accessModes.map(m => (
+        <Card title={m.name} accent={m.agentic}>
+          <p class="opacity-80">{m.blurb}</p>
+          {m.agentic && <p class="mt-2 text-sm text-gradient font-semibold">Agent-ready</p>}
+        </Card>
+      ))}
+    </div>
+    <div class="mt-6">
+      <a href="/integrations" class="btn-secondary">Custom metrics &amp; advanced integrations →</a>
+    </div>
+  </Section>
+
+  <!-- 5. Supported formats strip -->
+  <Section eyebrow="Formats" heading="Bring your data">
+    <FormatChips />
+  </Section>
+
+  <!-- 6. Get started teaser -->
+  <Section eyebrow="Get started" heading="Up and running in minutes">
+    <CodeTabs tabs={[
+      {label:"Library", code:"pip install aidrin\npython -c \"import aidrin; print(aidrin.__version__)\"", lang:"bash"},
+      {label:"CLI", code:"aidrin inspect data.csv", lang:"bash"},
+      {label:"Web", code:"# Open the hosted inspector — no install\nhttps://aidrin.org/inspector", lang:"bash"},
+    ]} />
+    <div class="mt-6"><a href="/get-started" class="btn-secondary">Full installation guide →</a></div>
+  </Section>
+
+  <!-- 7. Credibility band: publications -->
+  <Section eyebrow="Research" heading="Backed by peer-reviewed research">
+    <ul class="space-y-4" data-testid="pubs">
+      {pubs.map(p => <li><span class="font-semibold">{p.data.title}</span><span class="opacity-70"> — {p.data.venue}, {p.data.year}</span></li>)}
+    </ul>
+    <div class="mt-6"><a href="/publications" class="btn-secondary">All publications →</a></div>
+  </Section>
+
+  <!-- 8. Final CTA -->
+  <section class="max-w-7xl mx-auto px-6 py-20 text-center">
+    <h2 class="font-display font-bold text-4xl text-gradient">Start inspecting your data</h2>
+    <div class="mt-8 flex justify-center gap-4">
+      <a href={site.inspector} class="btn-primary">Launch Inspector</a>
+      <a href="/get-started" class="btn-secondary">Get Started</a>
+    </div>
+  </section>
 </BaseLayout>
