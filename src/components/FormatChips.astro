@@ -1,0 +1,6 @@
+---
+import { formats } from "../data/formats.ts";
+---
+<ul class="flex flex-wrap gap-2" data-testid="format-chips">
+  {formats.map(f => <li class="rounded-full border px-3 py-1 text-sm">{f}</li>)}
+</ul>
