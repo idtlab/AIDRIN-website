@@ -1,0 +1,30 @@
+---
+import { Code } from "astro:components";
+import CopyButton from "./CopyButton.astro";
+interface Props { tabs: { label: string; code: string; lang: string }[]; }
+const { tabs } = Astro.props;
+---
+<div class="rounded-xl border overflow-hidden" data-testid="code-tabs">
+  <div class="flex gap-2 border-b px-3 py-2 text-sm">
+    {tabs.map((t, i) => <button class="tab" data-i={i} aria-pressed={i === 0}>{t.label}</button>)}
+  </div>
+  {tabs.map((t, i) => (
+    <div class="panel" data-i={i} hidden={i !== 0}>
+      <div class="flex justify-end px-3 pt-2"><CopyButton code={t.code} /></div>
+      <Code code={t.code} lang={t.lang as any} />
+    </div>
+  ))}
+</div>
+<script>
+  document.querySelectorAll('[data-testid="code-tabs"]').forEach(box => {
+    const tabs = box.querySelectorAll(".tab"), panels = box.querySelectorAll(".panel");
+    tabs.forEach(tab => tab.addEventListener("click", () => {
+      const i = tab.getAttribute("data-i");
+      tabs.forEach(t => t.setAttribute("aria-pressed", String(t === tab)));
+      panels.forEach(p => {
+        const el = p as HTMLElement;
+        el.hidden = el.getAttribute("data-i") !== i;
+      });
+    }));
+  });
+</script>
