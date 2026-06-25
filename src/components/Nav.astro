@@ -20,6 +20,6 @@ import { site } from "../data/site.ts";
   const b = document.getElementById("nav-toggle"), m = document.getElementById("mobile-menu");
   b?.addEventListener("click", () => {
     const open = m.classList.toggle("hidden") === false;
-    m.classList.toggle("flex", open); b.setAttribute("aria-expanded", String(open));
+    m.classList.toggle("flex", open); b.setAttribute("aria-expanded", String(open)); b.setAttribute("aria-label", open ? "Close menu" : "Open menu");
   });
 </script>
