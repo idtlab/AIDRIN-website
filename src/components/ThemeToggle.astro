@@ -1,0 +1,7 @@
+<button id="theme-toggle" aria-label="Toggle dark mode" class="fixed bottom-4 right-4 rounded-full border p-2">🌓</button>
+<script is:inline>
+  document.getElementById("theme-toggle").addEventListener("click", () => {
+    const dark = document.documentElement.classList.toggle("dark");
+    localStorage.setItem("theme", dark ? "dark" : "light");
+  });
+</script>

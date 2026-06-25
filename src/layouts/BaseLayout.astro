@@ -1,0 +1,28 @@
+---
+import "../styles/global.css";
+import "@fontsource-variable/inter";
+import "@fontsource/saira-condensed/600.css";
+import "@fontsource/saira-condensed/700.css";
+import ThemeToggle from "../components/ThemeToggle.astro";
+interface Props { title: string; description: string; }
+const { title, description } = Astro.props;
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <script is:inline>
+      // no-FOUC: apply theme before paint
+      const t = localStorage.getItem("theme");
+      if (t === "dark" || (!t && matchMedia("(prefers-color-scheme: dark)").matches))
+        document.documentElement.classList.add("dark");
+    </script>
+  </head>
+  <body>
+    <slot />
+    <ThemeToggle />
+  </body>
+</html>

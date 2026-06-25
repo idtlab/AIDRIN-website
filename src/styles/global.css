@@ -1,0 +1,36 @@
+@import "tailwindcss";
+
+:root {
+  --color-cream: #FBFBF2;
+  --color-charcoal: #1C1E21;
+  --grad-from: #E96A50;
+  --grad-via: #A85FBE;
+  --grad-to: #4F86E8;
+  --bg: var(--color-cream);
+  --fg: var(--color-charcoal);
+}
+html.dark {
+  --bg: var(--color-charcoal);
+  --fg: var(--color-cream);
+}
+html { background: var(--bg); color: var(--fg); font-family: "Inter Variable", system-ui, sans-serif; }
+.font-display { font-family: "Saira Condensed", "Inter Variable", sans-serif; }
+
+/* Gradient ONLY for large display text / decorative — never body text */
+.text-gradient {
+  background: linear-gradient(100deg, var(--grad-from), var(--grad-via), var(--grad-to));
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+}
+@media (forced-colors: active) { .text-gradient { color: CanvasText; -webkit-text-fill-color: CanvasText; } }
+
+.btn-primary {
+  display: inline-flex; align-items: center; gap: .5rem; font-weight: 600; color: #fff;
+  padding: .75rem 1.25rem; border-radius: .75rem;
+  background: linear-gradient(100deg, var(--grad-from), var(--grad-via), var(--grad-to));
+}
+.btn-secondary {
+  display: inline-flex; align-items: center; gap: .5rem; font-weight: 600;
+  padding: .75rem 1.25rem; border-radius: .75rem; border: 1.5px solid currentColor;
+}
+:focus-visible { outline: 3px solid var(--grad-via); outline-offset: 2px; }
+@media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }
