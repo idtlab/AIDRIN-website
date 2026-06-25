@@ -6,7 +6,7 @@ const { tabs } = Astro.props;
 ---
 <div class="rounded-xl border overflow-hidden" data-testid="code-tabs">
   <div class="flex gap-2 border-b px-3 py-2 text-sm">
-    {tabs.map((t, i) => <button class="tab" data-i={i} aria-pressed={i === 0}>{t.label}</button>)}
+    {tabs.map((t, i) => <button class="tab focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--grad-from)]" data-i={i} aria-pressed={i === 0}>{t.label}</button>)}
   </div>
   {tabs.map((t, i) => (
     <div class="panel" data-i={i} hidden={i !== 0}>
