@@ -20,7 +20,7 @@ for the architecture overview.
 ## Brand & naming
 
 - **AIDRIN** = "AI Data Readiness Infrastructure" (the project). The **Inspector** = the hosted web
-  app at `aidrin.org/inspector`, one access mode among many. Don't conflate them.
+  app at `demo.aidrin.org`, one access mode among many. Don't conflate them.
 - The primary CTA label is **"Demo"** (points to the Inspector). Keep it consistent across nav,
   hero, and closer.
 - No em dashes ("—") in user-facing copy — use commas, periods, or colons. (They read as an AI tell
