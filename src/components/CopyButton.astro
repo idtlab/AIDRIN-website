@@ -1,9 +1,0 @@
----
-interface Props { code: string; }
-const { code } = Astro.props;
----
-<button class="copy-btn text-xs opacity-70 hover:opacity-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--grad-from)]" data-code={code} aria-label="Copy code">Copy</button>
-<script>
-  document.querySelectorAll(".copy-btn").forEach(b =>
-    b.addEventListener("click", () => navigator.clipboard.writeText(b.getAttribute("data-code") ?? "")));
-</script>
