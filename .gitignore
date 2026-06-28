@@ -1,7 +1,29 @@
-node_modules/
+# build output
 dist/
 .astro/
-.DS_Store
+
+# dependencies
+node_modules/
+
+# test artifacts
 test-results/
 playwright-report/
+playwright/.cache/
+
+# environment
+.env
+.env.*
+!.env.example
+
+# logs
+*.log
+npm-debug.log*
+
+# os / editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# tooling scratch
 .superpowers/
