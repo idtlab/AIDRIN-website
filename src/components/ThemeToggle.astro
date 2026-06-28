@@ -1,7 +1,26 @@
-<button id="theme-toggle" aria-label="Toggle dark mode" class="fixed bottom-4 right-4 rounded-full border p-2">🌓</button>
-<script is:inline>
-  document.getElementById("theme-toggle").addEventListener("click", () => {
-    const dark = document.documentElement.classList.toggle("dark");
-    localStorage.setItem("theme", dark ? "dark" : "light");
+---
+import Icon from "./Icon.astro";
+---
+<button type="button" aria-label="Toggle dark mode"
+  class="theme-toggle grid place-items-center w-10 h-10 rounded-full hairline surface hover:border-[var(--magenta)] transition-colors">
+  <span class="sun"><Icon name="sun" class="w-5 h-5" /></span>
+  <span class="moon hidden"><Icon name="moon" class="w-5 h-5" /></span>
+</button>
+<script>
+  // Bundled module script: runs once even if the toggle appears multiple times.
+  const sync = () => {
+    const dark = document.documentElement.classList.contains("dark");
+    document.querySelectorAll(".theme-toggle").forEach(btn => {
+      btn.querySelector(".sun")?.classList.toggle("hidden", dark);
+      btn.querySelector(".moon")?.classList.toggle("hidden", !dark);
+    });
+  };
+  document.querySelectorAll(".theme-toggle").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const dark = document.documentElement.classList.toggle("dark");
+      localStorage.setItem("theme", dark ? "dark" : "light");
+      sync();
+    });
   });
+  sync();
 </script>

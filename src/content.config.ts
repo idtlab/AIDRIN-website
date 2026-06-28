@@ -14,12 +14,5 @@ const publications = defineCollection({
     bibtex: z.string().optional(),
   }),
 });
-const useCases = defineCollection({
-  loader: glob({ pattern: "**/*.md", base: "./src/content/use-cases" }),
-  schema: z.object({ title: z.string(), domain: z.string(), summary: z.string(), draft: z.boolean().default(true) }),
-});
-const team = defineCollection({
-  loader: glob({ pattern: "**/*.md", base: "./src/content/team" }),
-  schema: z.object({ name: z.string(), role: z.string(), affiliation: z.string().optional(), draft: z.boolean().default(true) }),
-});
-export const collections = { publications, useCases, team };
+
+export const collections = { publications };
