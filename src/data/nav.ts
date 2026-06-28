@@ -1,6 +1,7 @@
+// Single-page site: nav links are in-page anchors.
 export const navLinks = [
-  { label: "Features", href: "/features" },
-  { label: "Integrations", href: "/integrations" },
-  { label: "Get Started", href: "/get-started" },
-  { label: "Publications", href: "/publications" },
+  { label: "Dimensions", href: "#dimensions" },
+  { label: "Capabilities", href: "#capabilities" },
+  { label: "Get started", href: "#get-started" },
+  { label: "Research", href: "#research" },
 ];

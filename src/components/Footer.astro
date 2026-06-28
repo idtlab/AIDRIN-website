@@ -1,19 +1,34 @@
 ---
 import { site } from "../data/site.ts";
 import { navLinks } from "../data/nav.ts";
+import { acknowledgements } from "../data/acknowledgements.ts";
 ---
-<footer class="border-t mt-24 px-6 py-12 max-w-7xl mx-auto text-sm">
-  <div class="grid gap-8 md:grid-cols-3">
-    <div><span class="font-display text-gradient text-xl">AIDRIN</span><p class="opacity-70 mt-2">AI Data Readiness Inspector</p></div>
-    <div><h3 class="font-semibold mb-2">Resources</h3>
-      {navLinks.map(l => <a class="block opacity-70 hover:opacity-100" href={l.href}>{l.label}</a>)}
-      <a class="block opacity-70 hover:opacity-100" href={site.docs}>Documentation</a>
+<footer class="band-tint border-t hairline">
+  <div class="wrap py-14 text-sm">
+    <div class="grid gap-10 md:grid-cols-[1.4fr_1fr_1fr]">
+      <div>
+        <a href="/" class="font-display text-2xl">AIDRIN</a>
+        <p class="text-muted mt-2 max-w-xs">AI Data Readiness Infrastructure. Quantitatively assess and improve your dataset's readiness for AI.</p>
+      </div>
+      <div>
+        <h3 class="font-display font-semibold uppercase tracking-wider text-xs text-muted mb-3">Resources</h3>
+        {navLinks.map(l => <a class="block nav-link py-1" href={l.href}>{l.label}</a>)}
+        <a class="block nav-link py-1" href={site.docs}>Documentation</a>
+      </div>
+      <div>
+        <h3 class="font-display font-semibold uppercase tracking-wider text-xs text-muted mb-3">Connect</h3>
+        <a class="block nav-link py-1" href={site.github}>GitHub</a>
+        <a class="block nav-link py-1" href={site.inspector}>Demo</a>
+      </div>
     </div>
-    <div><h3 class="font-semibold mb-2">Connect</h3>
-      <a class="block opacity-70 hover:opacity-100" href={site.github}>GitHub</a>
-      <a class="block opacity-70 hover:opacity-100" href={site.inspector}>Launch Inspector</a>
+    <div class="grad-bar mt-10 mb-6 max-w-[120px]"></div>
+    <div class="ack-strip">
+      {acknowledgements.map(a => (
+        a.logo
+          ? <img src={a.logo} alt={a.name} title={a.name} class="ack-logo" />
+          : <span class="ack-name" title={a.name}>{a.short}</span>
+      ))}
     </div>
+    <p class="text-muted mt-8">© {new Date().getFullYear()} AIDRIN · AI Data Readiness Infrastructure</p>
   </div>
-  <p class="opacity-70 mt-8">{/* TODO: confirm exact funding text */}Supported in part by the U.S. National Science Foundation and collaborating institutions.</p>
-  <p class="opacity-70 mt-1">© {new Date().getFullYear()} AIDRIN. Open source on GitHub.</p>
 </footer>

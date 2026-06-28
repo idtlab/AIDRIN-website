@@ -1,19 +1,30 @@
 ---
 import "../styles/global.css";
-import "@fontsource-variable/inter";
-import "@fontsource/saira-condensed/600.css";
-import "@fontsource/saira-condensed/700.css";
-import ThemeToggle from "../components/ThemeToggle.astro";
+import "@fontsource/roboto/400.css";
+import "@fontsource/roboto/500.css";
+import "@fontsource/roboto/700.css";
+import "@fontsource/roboto/900.css";
 import Nav from "../components/Nav.astro";
 import Footer from "../components/Footer.astro";
 interface Props { title: string; description: string; }
 const { title, description } = Astro.props;
+const GTM_ID = "GTM-T8NVSNF7";
+const analyticsOn = import.meta.env.PROD;   // load GTM only in production builds, not in `astro dev`
 ---
 <!doctype html>
 <html lang="en">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    {analyticsOn && (
+      <!-- Google Tag Manager -->
+      <script is:inline set:html={`(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','${GTM_ID}');`} />
+      <!-- End Google Tag Manager -->
+    )}
     <title>{title}</title>
     <meta name="description" content={description} />
     <script is:inline>
@@ -24,11 +35,14 @@ const { title, description } = Astro.props;
     </script>
   </head>
   <body>
+    {analyticsOn && (
+      <!-- Google Tag Manager (noscript) -->
+      <noscript set:html={`<iframe src="https://www.googletagmanager.com/ns.html?id=${GTM_ID}" height="0" width="0" style="display:none;visibility:hidden"></iframe>`} />
+    )}
     <Nav />
     <main>
       <slot />
     </main>
     <Footer />
-    <ThemeToggle />
   </body>
 </html>

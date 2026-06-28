@@ -4,82 +4,346 @@ import Section from "../components/Section.astro";
 import Card from "../components/Card.astro";
 import FormatChips from "../components/FormatChips.astro";
 import CodeTabs from "../components/CodeTabs.astro";
+import Icon from "../components/Icon.astro";
 import { site } from "../data/site.ts";
-import { dimensions } from "../data/dimensions.ts";
+import { dimensions, crossCutting } from "../data/dimensions.ts";
 import { workflowSteps } from "../data/workflow.ts";
 import { accessModes } from "../data/access-modes.ts";
+import { integrations } from "../data/integrations.ts";
 import { getCollection } from "astro:content";
-const pubs = (await getCollection("publications")).sort((a,b)=>b.data.year-a.data.year).slice(0,3);
+const pubs = (await getCollection("publications")).sort((a, b) => b.data.year - a.data.year);
+const wfIcons = ["inspect", "remediate", "transform"];
+const wfColors = ["#E96A50", "#A85FBE", "#4F86E8"];
+const pubLink = (d: any) => d.doi ? `https://doi.org/${d.doi}` : d.arxiv ? `https://arxiv.org/abs/${d.arxiv}` : d.url;
 ---
-<BaseLayout title="AIDRIN — AI Data Readiness Inspector" description="AIDRIN quantitatively assesses and improves your dataset's readiness for AI/ML.">
+<BaseLayout title="AIDRIN: AI Data Readiness Infrastructure" description="AIDRIN is open-source infrastructure that quantitatively assesses and improves your dataset's readiness for AI/ML.">
+
   <!-- 1. Hero -->
-  <section class="max-w-7xl mx-auto px-6 pt-16 pb-24 text-center" data-testid="hero">
-    <h1 class="font-display font-bold text-5xl md:text-7xl text-gradient">Is your data ready for AI?</h1>
-    <p class="mt-6 text-lg md:text-xl max-w-2xl mx-auto opacity-80">AIDRIN quantitatively assesses and improves your dataset's readiness for AI and machine learning.</p>
-    <div class="mt-8 flex justify-center gap-4">
-      <a href={site.inspector} class="btn-primary">Launch Inspector</a>
-      <a href="/get-started" class="btn-secondary">Get Started</a>
+  <section class="hero" data-testid="hero">
+    <div class="wrap grid lg:grid-cols-[1.05fr_.95fr] gap-12 items-center py-20 md:py-28">
+      <div class="relative z-10">
+        <span class="badge mb-5">AI Data Readiness Infrastructure</span>
+        <h1 class="font-display text-4xl md:text-5xl leading-[1.05]">
+          Is your data <span class="text-gradient">ready for AI?</span>
+        </h1>
+        <p class="text-muted text-base md:text-lg mt-5 max-w-xl">
+          AIDRIN is open-source infrastructure that quantitatively assesses and improves your
+          dataset's readiness for AI and machine learning, then helps you remediate what's holding it back.
+        </p>
+        <div class="mt-9 flex flex-wrap gap-3">
+          <a href={site.inspector} class="btn-primary">Demo <Icon name="arrow" class="w-4 h-4" /></a>
+          <a href="#get-started" class="btn-secondary">Get Started</a>
+        </div>
+      </div>
+
+      <div class="hero-stage">
+        <!-- remediation grid: red/amber cells (nulls, outliers) flip to clean when the agent remediates -->
+        <div class="fix-grid" id="fix-grid" aria-hidden="true">
+          <div class="fg-head"><span>data.parquet</span><span class="fg-status">9 issues</span></div>
+          <div class="fg-cells"></div>
+        </div>
+
+        <div class="agent-console" id="agent-console" aria-hidden="true">
+          <div class="ac-head">
+            <span class="ac-dots"><i></i><i></i><i></i></span>
+            <span class="ac-title">aidrin · agent</span>
+            <svg class="ac-spark" viewBox="0 0 72 18" preserveAspectRatio="none" fill="none">
+              <path d="M0 12 L8 9 L14 14 L20 5 L26 11 L33 7 L40 13 L47 4 L54 10 L61 8 L72 11" />
+            </svg>
+          </div>
+          <div class="ac-body">
+            <div class="ac-line" data-i="0"><span class="ac-prompt">$</span>&nbsp;aidrin agentic run -c eval.yaml</div>
+            <div class="ac-line" data-i="1"><span class="ac-tag insp">inspect</span> completeness 0.94 · 1.2M rows</div>
+            <div class="ac-line" data-i="2"><span class="ac-tag obs">trace</span> 7 dimensions · spans emitted</div>
+            <div class="ac-line" data-i="3"><span class="ac-tag rem">remediate</span> imputed 312 nulls</div>
+            <div class="ac-line" data-i="4"><span class="ac-tag tr">transform</span> normalized 3 cols → ai-ready</div>
+            <div class="ac-line" data-i="5"><span class="ac-ok">✓ ready</span><span class="ac-cursor"></span></div>
+          </div>
+          <div class="ac-foot">
+            <div class="ac-readiness"><span id="ac-phase">Inspecting</span><span class="ac-score" id="ac-score">0%</span></div>
+            <div class="ac-meter"><span id="ac-meter"></span></div>
+          </div>
+        </div>
+      </div>
     </div>
   </section>
 
-  <!-- 2. What is AIDRIN + workflow -->
-  <Section eyebrow="Workflow" heading="Inspect. Remediate. Transform.">
-    <div class="grid gap-6 md:grid-cols-3" data-testid="workflow">
-      {workflowSteps.map(w => <Card title={w.step}><p class="opacity-80">{w.blurb}</p></Card>)}
-    </div>
-  </Section>
-
-  <!-- 3. Six dimensions -->
-  <Section eyebrow="Assessment" heading="Six readiness dimensions">
-    <div class="grid gap-6 md:grid-cols-3" data-testid="dimensions">
-      {dimensions.map(d => <Card title={d.title}><p class="opacity-80">{d.blurb}</p></Card>)}
-    </div>
-  </Section>
-
-  <!-- 4. How you use it -->
-  <Section eyebrow="Access" heading="Use AIDRIN your way">
-    <div class="grid gap-6 md:grid-cols-3" data-testid="access-modes">
-      {accessModes.map(m => (
-        <Card title={m.name} accent={m.agentic}>
-          <p class="opacity-80">{m.blurb}</p>
-          {m.agentic && <span class="mt-2 inline-block text-xs font-semibold rounded-full border px-2 py-0.5">Agent-ready</span>}
+  <!-- 2. Workflow -->
+  <Section bg="tint" eyebrow="How it works" heading="Inspect. Remediate. Transform."
+    lead="AIDRIN is more than an assessment tool. It closes the loop from inspection to an AI-ready dataset.">
+    <div class="grid gap-5 md:grid-cols-3" data-testid="workflow">
+      {workflowSteps.map((w, i) => (
+        <Card title={w.step} icon={wfIcons[i]} accentColor={wfColors[i]}>
+          <p class="text-muted">{w.blurb}</p>
         </Card>
       ))}
     </div>
-    <div class="mt-6">
-      <a href="/integrations" class="btn-secondary">Custom metrics &amp; advanced integrations →</a>
+  </Section>
+
+  <!-- 3. Dimensions: readiness spectrum signature -->
+  <Section id="dimensions" eyebrow="Assessment" heading="Seven readiness dimensions"
+    lead="Six core dimensions, color-coded across the readiness spectrum, plus AI Application-Specific readiness that cuts across them all.">
+    <div class="spectrum-frame">
+      <div class="grid gap-3.5 sm:grid-cols-2 lg:grid-cols-3" data-testid="dimensions">
+        {dimensions.map(d => (
+          <div class="dim-card" style={`--accent:${d.color}`}>
+            <div class="flex items-center gap-3 mb-2">
+              <span class="dim-icon"><Icon name={d.icon} /></span>
+              <h3 class="font-semibold leading-tight">{d.title}</h3>
+            </div>
+            <p class="text-muted text-sm">{d.blurb}</p>
+          </div>
+        ))}
+      </div>
+      <div class="crosscut">
+        <span class="cc-icon"><Icon name={crossCutting.icon} /></span>
+        <div>
+          <div class="flex items-center gap-2">
+            <h3 class="font-display font-bold text-lg">{crossCutting.title}</h3>
+            <span class="text-[.7rem] font-bold uppercase tracking-wider bg-white/20 rounded-full px-2 py-0.5">Cross-cutting</span>
+          </div>
+          <p class="text-sm text-white/90 mt-0.5">{crossCutting.blurb}</p>
+        </div>
+      </div>
     </div>
   </Section>
 
-  <!-- 5. Supported formats strip -->
-  <Section eyebrow="Formats" heading="Bring your data">
+  <!-- 4. Capabilities: access modes + extend -->
+  <Section id="capabilities" bg="tint" eyebrow="Access" heading="Use AIDRIN your way"
+    lead="One engine, six ways in, from a zero-setup browser app to an AI agent driving it for you.">
+    <div class="grid gap-5 sm:grid-cols-2 lg:grid-cols-3" data-testid="access-modes">
+      {accessModes.map(m => (
+        <Card title={m.name} icon={m.icon} accentColor="#A85FBE" badge={m.agentic ? "Agent-ready" : undefined}>
+          <p class="text-muted text-sm">{m.blurb}</p>
+        </Card>
+      ))}
+    </div>
+
+    <p class="eyebrow mt-14 mb-5">Built to extend</p>
+    <div class="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+      {integrations.map(it => (
+        <div class="ui-card hoverable">
+          <div class="flex items-center gap-3 mb-2">
+            {it.logo
+              ? <span class="card-icon" style="background:var(--surface);border:1px solid var(--line)"><img src={it.logo} alt={`${it.name} logo`} style="width:22px;height:22px;object-fit:contain" /></span>
+              : <span class="card-icon"><Icon name={it.icon} /></span>}
+            <h3 class="font-semibold leading-tight">{it.name}</h3>
+          </div>
+          <p class="text-muted text-sm">{it.blurb}</p>
+        </div>
+      ))}
+    </div>
+  </Section>
+
+  <!-- 5. Formats -->
+  <Section eyebrow="Inputs" heading="Bring your data"
+    lead="AIDRIN reads the formats scientific and ML datasets actually ship in.">
     <FormatChips />
   </Section>
 
-  <!-- 6. Get started teaser -->
-  <Section eyebrow="Get started" heading="Up and running in minutes">
+  <!-- 6. Get started -->
+  <Section id="get-started" bg="tint" eyebrow="Get started" heading="Up and running in minutes"
+    lead="Install the Python library, drive it from the CLI, run it from source, or self-host the full web app.">
     <CodeTabs tabs={[
-      {label:"Library", code:"pip install aidrin\npython -c \"import aidrin; print(aidrin.__version__)\"", lang:"bash"},
-      {label:"CLI", code:"aidrin inspect data.csv", lang:"bash"},
-      {label:"Web", code:"# Open the hosted inspector — no install\nhttps://aidrin.org/inspector", lang:"bash"},
+      { label: "Library", code: "# pip install aidrin\nfrom aidrin import calculate_completeness, calculate_outliers\n\n# file_info = (path, name, type)\nfile_info = (\"data/adult.csv\", \"adult.csv\", \".csv\")\n\ncalculate_completeness(file_info)\n# {'Overall Completeness': 0.97, 'Completeness scores': {...}}\n\ncalculate_outliers(file_info)\n# {'Outlier scores': {...}}", lang: "python" },
+      { label: "CLI", code: "aidrin list                       # available metrics\naidrin data-quality data.csv      # completeness, duplicity, outliers\naidrin run completeness data.csv  # a single metric", lang: "bash" },
+      { label: "From source", code: "git clone https://github.com/idtlab/AIDRIN.git\ncd AIDRIN\nconda create -n aidrin-env python=3.10 -y\nconda activate aidrin-env\npython -m pip install -e .", lang: "bash" },
+      { label: "Self-Hosted Web App", code: "# 1) Redis\nredis-server --port 6379\n# 2) Celery worker\nPYTHONPATH=. celery -A worker.make_celery worker --beat --loglevel=info\n# 3) Flask app  ->  http://127.0.0.1:5000\nflask --app 'web:create_app()' run --debug", lang: "bash" },
     ]} />
-    <div class="mt-6"><a href="/get-started" class="btn-secondary">Full installation guide →</a></div>
+    <div class="mt-7"><a href={site.docs} class="btn-secondary">Read the full documentation <Icon name="arrow" class="w-4 h-4" /></a></div>
   </Section>
 
-  <!-- 7. Credibility band: publications -->
-  <Section eyebrow="Research" heading="Backed by peer-reviewed research">
-    <ul class="space-y-4" data-testid="pubs">
-      {pubs.map(p => <li><span class="font-semibold">{p.data.title}</span><span class="opacity-70"> — {p.data.venue}, {p.data.year}</span></li>)}
+  <!-- 7. Research -->
+  <Section id="research" eyebrow="Research" heading="Backed by peer-reviewed research"
+    lead="AIDRIN grows out of published work on data readiness for AI (2024–2025).">
+    <ul class="grid gap-3 md:grid-cols-2" data-testid="pubs">
+      {pubs.map(p => (
+        <li>
+          <a href={pubLink(p.data)} class="ui-card hoverable block h-full">
+            <p class="font-semibold leading-snug">{p.data.title}</p>
+            <p class="text-muted text-sm mt-2">{p.data.authors}</p>
+            <p class="text-muted text-sm mt-1">{p.data.venue} · {p.data.year} <span class="font-semibold" style="color:var(--btn)">· Read →</span></p>
+          </a>
+        </li>
+      ))}
     </ul>
-    <div class="mt-6"><a href="/publications" class="btn-secondary">All publications →</a></div>
   </Section>
 
-  <!-- 8. Final CTA -->
-  <section class="max-w-7xl mx-auto px-6 py-20 text-center">
-    <h2 class="font-display font-bold text-4xl text-gradient">Start inspecting your data</h2>
-    <div class="mt-8 flex justify-center gap-4">
-      <a href={site.inspector} class="btn-primary">Launch Inspector</a>
-      <a href="/get-started" class="btn-secondary">Get Started</a>
+  <!-- 8. Closing -->
+  <section class="closer">
+    <div class="wrap closer-inner">
+      <div class="closer-copy">
+        <p class="eyebrow">The bottom line</p>
+        <h2 class="font-display text-3xl md:text-5xl leading-[1.18] mt-3">
+          Stop guessing whether<br /><span class="text-gradient">your data is ready.</span>
+        </h2>
+        <p class="text-muted text-lg mt-5 max-w-md">
+          One engine, every interface. Measure, fix, and ship an AI-ready dataset from the
+          browser, your code, the command line, or an AI agent.
+        </p>
+        <div class="mt-8 flex flex-wrap gap-3">
+          <a href={site.inspector} class="btn-primary">Demo <Icon name="arrow" class="w-4 h-4" /></a>
+          <a href="#get-started" class="btn-secondary">Get Started</a>
+        </div>
+      </div>
+
+      <div class="switcher" id="switcher" aria-hidden="true">
+        <div class="sw-head">
+          <span class="ac-dots"><i></i><i></i><i></i></span>
+          <span class="sw-names">
+            <span class="sw-name on" data-n="0"><Icon name="browser" /> Web Inspector</span>
+            <span class="sw-name" data-n="1"><Icon name="terminal" /> CLI</span>
+            <span class="sw-name" data-n="2"><Icon name="package" /> Python Library</span>
+            <span class="sw-name" data-n="3"><Icon name="plug" /> MCP Agent</span>
+          </span>
+        </div>
+        <div class="sw-body">
+          <!-- Web Inspector -->
+          <div class="sw-screen on" data-s="0">
+            <div class="sw-url">aidrin.org/inspector</div>
+            <div class="sw-row"><span class="font-mono">data.parquet</span><span class="sw-ok">assessed</span></div>
+            <div class="sw-metric"><span>Completeness</span><span>0.92</span></div>
+            <div class="sw-bar"><span style="width:92%"></span></div>
+            <div class="sw-meta">7 readiness metrics computed</div>
+          </div>
+          <!-- CLI -->
+          <div class="sw-screen" data-s="1">
+            <div class="sw-term">
+              <div><span class="ac-prompt">$</span> aidrin data-quality data.csv</div>
+              <div class="sw-dim">▸ scanning 1.2M rows…</div>
+              <div><span class="ac-ok">✓</span> completeness · duplicity · outliers</div>
+            </div>
+          </div>
+          <!-- Python Library -->
+          <div class="sw-screen" data-s="2">
+            <div class="sw-cell"><span class="sw-in">In&nbsp;[1]</span><code>from aidrin import calculate_completeness</code></div>
+            <div class="sw-cell"><span class="sw-in">&nbsp;</span><code>calculate_completeness(file_info)</code></div>
+            <div class="sw-cell out"><span class="sw-out">Out[1]</span><code>{'{'}'Overall Completeness': 0.97{'}'}</code></div>
+          </div>
+          <!-- MCP Agent -->
+          <div class="sw-screen" data-s="3">
+            <div class="sw-msg user">Is data.parquet ready for training?</div>
+            <div class="sw-msg ai">Completeness 0.92, balanced classes, no PII. Imputed 312 nulls and normalized 3 columns.</div>
+          </div>
+        </div>
+      </div>
     </div>
   </section>
+
 </BaseLayout>
+
+<script>
+  // Hero scene: the agent console streams inspect→remediate→transform while a data grid
+  // gets cleaned (red/amber issue cells flip to clean) at the remediate step.
+  const consoleEl = document.getElementById("agent-console");
+  const gridWrap = document.getElementById("fix-grid");
+
+  // Build the data grid (12 cols × 6 rows = 72 cells; some flagged as issues).
+  const TOTAL = 72;
+  const crit = new Set([15, 41, 58]);                            // red: outliers / bad values
+  const warn = new Set([7, 23, 33, 49, 64, 70]);                 // amber: missing values
+  let allCells: HTMLElement[] = [];
+  let issueCells: HTMLElement[] = [];
+  if (gridWrap) {
+    const cells = gridWrap.querySelector(".fg-cells");
+    for (let i = 0; i < TOTAL; i++) {
+      const c = document.createElement("span");
+      c.classList.add("fg-cell");
+      if (crit.has(i)) { c.classList.add("crit"); c.dataset.kind = "crit"; }
+      else if (warn.has(i)) { c.classList.add("bad"); c.dataset.kind = "bad"; }
+      cells?.appendChild(c);
+      allCells.push(c);
+      if (crit.has(i) || warn.has(i)) issueCells.push(c);
+    }
+  }
+
+  if (consoleEl) {
+    const lines = Array.from(consoleEl.querySelectorAll<HTMLElement>(".ac-line"));
+    const meter = document.getElementById("ac-meter");
+    const score = document.getElementById("ac-score");
+    const phase = document.getElementById("ac-phase");
+    const status = gridWrap?.querySelector<HTMLElement>(".fg-status");
+    const cellsEl = gridWrap?.querySelector<HTMLElement>(".fg-cells");
+    const targets = [4, 38, 55, 74, 90, 100];                                  // meter % per line
+    const phases  = ["Inspecting","Inspecting","Inspecting","Remediating","Transforming","Ready"];
+    const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    const setScore = (pct: number) => {
+      if (score) score.textContent = Math.round(pct) + "%";
+      if (meter) meter.style.width = pct + "%";
+    };
+    const setStatus = (text: string, state: "" | "issues" | "ok") => {
+      if (!status) return;
+      status.textContent = text;
+      status.classList.toggle("issues", state === "issues");
+      status.classList.toggle("ok", state === "ok");
+    };
+    // inspect → scan sweeps, issues get discovered; remediate → morph to circles + clear; transform → all green (random)
+    const resetGrid = () => {
+      cellsEl?.classList.remove("morph");
+      allCells.forEach(c => c.classList.remove("green", "bad", "crit"));  // clean squares
+      setStatus("scanning…", "");
+    };
+    const discoverIssues = () => {                                       // issues appear as the scan finds them
+      let found = 0;
+      issueCells.forEach((c, k) => setTimeout(() => {
+        c.classList.add(c.dataset.kind === "crit" ? "crit" : "bad");
+        found++; setStatus(`${found} issue${found > 1 ? "s" : ""}`, "issues");
+      }, 550 + k * 170));
+    };
+    const remediate = () => {
+      cellsEl?.classList.add("morph");                                   // squares → circles
+      issueCells.forEach(c => c.classList.remove("bad", "crit"));         // issues cleared
+      setStatus("clean", "ok");
+    };
+    const transform = () => {                                            // all cells → light green, random order
+      const order = allCells.map((_, i) => i).sort(() => Math.random() - 0.5);
+      order.forEach((idx, k) => setTimeout(() => allCells[idx].classList.add("green"), k * 22));
+    };
+
+    if (reduce) {
+      lines.forEach(l => l.classList.add("on"));
+      setScore(100); if (phase) phase.textContent = "Ready";
+      cellsEl?.classList.add("morph"); allCells.forEach(c => c.classList.add("green")); setStatus("clean", "ok");
+    } else {
+      const run = () => {
+        lines.forEach(l => l.classList.remove("on"));
+        setScore(0); if (phase) phase.textContent = "Inspecting";
+        resetGrid(); discoverIssues();                                       // inspect: scan + find issues
+        let from = 0;
+        lines.forEach((line, i) => {
+          setTimeout(() => {
+            line.classList.add("on");
+            if (phase) phase.textContent = phases[i];
+            if (i === 3) remediate();                                         // remediate → circles + cleared
+            if (i === 4) transform();                                         // transform → all light green
+            const to = targets[i], t0 = performance.now();
+            const tick = (t: number) => {
+              const k = Math.min(1, (t - t0) / 500);
+              setScore(from + (to - from) * k);
+              if (k < 1) requestAnimationFrame(tick); else from = to;
+            };
+            requestAnimationFrame(tick);
+          }, 700 + i * 1100);
+        });
+        setTimeout(run, 700 + lines.length * 1100 + 4200);                     // hold, then loop
+      };
+      run();
+    }
+  }
+
+  // Closing interface switcher: cycle the same result through Web → CLI → Python → MCP.
+  const switcher = document.getElementById("switcher");
+  if (switcher) {
+    const screens = Array.from(switcher.querySelectorAll<HTMLElement>(".sw-screen"));
+    const names = Array.from(switcher.querySelectorAll<HTMLElement>(".sw-name"));
+    const show = (i: number) => {
+      screens.forEach((s, k) => s.classList.toggle("on", k === i));
+      names.forEach((s, k) => s.classList.toggle("on", k === i));
+    };
+    if (!matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      let i = 0;
+      setInterval(() => { i = (i + 1) % screens.length; show(i); }, 2800);
+    }
+  }
+</script>

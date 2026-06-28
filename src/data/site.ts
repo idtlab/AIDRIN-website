@@ -1,5 +1,6 @@
 export const site = {
-  name: "AIDRIN — AI Data Readiness Inspector",
+  name: "AIDRIN: AI Data Readiness Infrastructure",
+  fullName: "AI Data Readiness Infrastructure",
   tagline: "Is your data ready for AI?",
   inspector: "https://aidrin.org/inspector",
   docs: "https://aidrin.readthedocs.io/en/latest/",

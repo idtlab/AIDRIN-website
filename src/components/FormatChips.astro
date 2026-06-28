@@ -1,6 +1,12 @@
 ---
 import { formats } from "../data/formats.ts";
+import Icon from "./Icon.astro";
 ---
-<ul class="flex flex-wrap gap-2" data-testid="format-chips">
-  {formats.map(f => <li class="rounded-full border px-3 py-1 text-sm">{f}</li>)}
+<ul class="fmt-grid" data-testid="format-chips">
+  {formats.map(f => (
+    <li class="fmt-chip" title={f.ext}>
+      <span class="fmt-icon"><Icon name={f.icon} /></span>
+      <span class="fmt-name">{f.name}</span>
+    </li>
+  ))}
 </ul>
