@@ -1,0 +1,47 @@
+# Continuous integration: type/syntax checks, build, and tests.
+# Runs on pull requests and on pushes to every branch EXCEPT main.
+# (main is handled by deploy.yml, which builds + deploys.)
+#
+# Recommended: protect `main` and require this "CI" check to pass before merging.
+
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches-ignore: [main]
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - run: npm ci
+
+      - name: Type / syntax / content-schema check
+        run: npm run check
+
+      - name: Build
+        run: npm run build
+
+      - name: Unit tests (data validation)
+        run: npm run test:unit
+
+      - name: Install Playwright browser
+        run: npx playwright install --with-deps chromium
+
+      - name: E2E + accessibility tests
+        run: npm run test:e2e
+
+      - name: Internal link check
+        run: npm run links

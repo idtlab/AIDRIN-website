@@ -3,7 +3,7 @@
 Marketing site for **AIDRIN — AI Data Readiness Infrastructure**. A single, static, content-driven
 page built with **Astro 5** and **Tailwind CSS v4**.
 
-- **Live tool (the Inspector web app):** https://aidrin.org/inspector
+- **Live tool (the Inspector web app):** https://demo.aidrin.org
 - **Docs:** https://aidrin.readthedocs.io/en/latest/
 - **Source:** https://github.com/idtlab/AIDRIN/
 
