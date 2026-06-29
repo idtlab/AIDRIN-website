@@ -5,7 +5,7 @@ import { acknowledgements } from "../data/acknowledgements.ts";
 ---
 <footer class="band-tint border-t hairline">
   <div class="wrap py-14 text-sm">
-    <div class="grid gap-10 md:grid-cols-[1.4fr_1fr_1fr]">
+    <div class="grid gap-10 md:grid-cols-[1.4fr_1fr_1fr_1fr]">
       <div>
         <a href="/" class="font-display text-2xl">AIDRIN</a>
         <p class="text-muted mt-2 max-w-xs">AI Data Readiness Infrastructure. Quantitatively assess and improve your dataset's readiness for AI.</p>
@@ -19,6 +19,11 @@ import { acknowledgements } from "../data/acknowledgements.ts";
         <h3 class="font-display font-semibold uppercase tracking-wider text-xs text-muted mb-3">Connect</h3>
         <a class="block nav-link py-1" href={site.github}>GitHub</a>
         <a class="block nav-link py-1" href={site.inspector}>Demo</a>
+      </div>
+      <div>
+        <h3 class="font-display font-semibold uppercase tracking-wider text-xs text-muted mb-3">Contact</h3>
+        {/* TODO: confirm contact email/link for Suren Byna */}
+        <a class="block nav-link py-1" href="mailto:byna.1@osu.edu">Suren Byna</a>
       </div>
     </div>
     <div class="grad-bar mt-10 mb-6 max-w-[120px]"></div>
