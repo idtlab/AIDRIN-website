@@ -4,7 +4,7 @@ test('exactly one primary CTA in nav, pointing to inspector', async ({ page }) =
   const cta = page.getByTestId('cta-primary');
   await expect(cta).toHaveCount(1);
   await expect(cta).toHaveText('Demo');
-  await expect(cta).toHaveAttribute('href', 'https://aidrin.org/inspector');
+  await expect(cta).toHaveAttribute('href', 'https://demo.aidrin.org');
 });
 test('footer shows institutional acknowledgement logos', async ({ page }) => {
   await page.goto('/');
