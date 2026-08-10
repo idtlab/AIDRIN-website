@@ -1,14 +1,16 @@
-# Build the static site in CI and deploy it to an EC2 instance over SSH (rsync).
+# Build the static site in CI and publish it to GitHub Pages.
 #
-# Required repository secrets (Settings → Secrets and variables → Actions):
-#   DEPLOY_SSH_KEY   private SSH key (e.g. an ed25519 deploy key) authorized on the instance
-#   DEPLOY_HOST      instance hostname or public IP (e.g. aidrin.org or 1.2.3.4)
-#   DEPLOY_USER      SSH user (e.g. ubuntu or ec2-user)
+# One-time setup (Settings → Pages):
+#   Source: "GitHub Actions"
+#   Custom domain: aidrin.org  (also committed as public/CNAME)
 #
-# Set DEPLOY_PATH below to the web root the instance serves (nginx example):
-#   server { listen 80; root /var/www/aidrin-landing; try_files $uri $uri/ =404; }
-# The deploy user must be able to write to DEPLOY_PATH (chown it to DEPLOY_USER,
-# or deploy to a staging dir and have a hook move it).
+# DNS for the apex domain must point at GitHub Pages:
+#   A    aidrin.org  185.199.108.153
+#   A    aidrin.org  185.199.109.153
+#   A    aidrin.org  185.199.110.153
+#   A    aidrin.org  185.199.111.153
+#   CNAME www        idtlab.github.io
+# Once the certificate is issued, tick "Enforce HTTPS".
 
 name: Deploy
 
@@ -21,11 +23,13 @@ concurrency:
   group: deploy
   cancel-in-progress: true
 
-env:
-  DEPLOY_PATH: /var/www/aidrin-website   # <-- web root on the instance
+permissions:
+  contents: read
+  pages: write
+  id-token: write
 
 jobs:
-  deploy:
+  build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -41,15 +45,18 @@ jobs:
       - run: npm run check
       - run: npm run build
 
-      - name: Configure SSH
-        run: |
-          mkdir -p ~/.ssh
-          printf '%s\n' "${{ secrets.DEPLOY_SSH_KEY }}" > ~/.ssh/deploy_key
-          chmod 600 ~/.ssh/deploy_key
-          ssh-keyscan -H "${{ secrets.DEPLOY_HOST }}" >> ~/.ssh/known_hosts 2>/dev/null
+      - uses: actions/configure-pages@v5
 
-      - name: Deploy dist/ to the instance
-        run: |
-          rsync -az --delete \
-            -e "ssh -i ~/.ssh/deploy_key -o IdentitiesOnly=yes" \
-            dist/ "${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }}:${DEPLOY_PATH}/"
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
