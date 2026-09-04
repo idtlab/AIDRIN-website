@@ -230,6 +230,20 @@ const pubLink = (d: any) => d.doi ? `https://doi.org/${d.doi}` : d.arxiv ? `http
     </div>
   </section>
 
+  <!-- 9. Subscribe -->
+  <section id="subscribe" class="subscribe">
+    <div class="wrap">
+      <p class="eyebrow">Newsletter</p>
+      <h2 class="font-display text-2xl md:text-4xl mt-3 mb-3 leading-[1.1]">Stay up to date</h2>
+      <p class="text-muted text-lg mb-8 max-w-xl">
+        Get new releases and research updates in your inbox.
+      </p>
+      <div class="subscribe-form">
+        <script is:inline async src="https://subscribe-forms.beehiiv.com/v3/loader.js" data-beehiiv-form="6f0f96a4-4552-4549-973d-792db9c77ca2"></script>
+      </div>
+    </div>
+  </section>
+
 </BaseLayout>
 
 <script>
@@ -345,5 +359,15 @@ const pubLink = (d: any) => d.doi ? `https://doi.org/${d.doi}` : d.arxiv ? `http
       let i = 0;
       setInterval(() => { i = (i + 1) % screens.length; show(i); }, 2800);
     }
+  }
+
+  // Newsletter: the beehiiv loader injects its iframe with no accessible name, so title it once it lands.
+  const formHost = document.querySelector(".subscribe-form");
+  if (formHost) {
+    const observer = new MutationObserver(() => {
+      const frame = formHost.querySelector("iframe:not([title])");
+      if (frame) { frame.setAttribute("title", "Newsletter signup form"); observer.disconnect(); }
+    });
+    observer.observe(formHost, { childList: true, subtree: true });
   }
 </script>
