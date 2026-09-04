@@ -228,6 +228,17 @@ html.dark .ack-logo:hover { opacity: 1; }
 }
 @media (min-width: 900px) { .closer-inner { grid-template-columns: 1fr 400px; gap: 4rem; } }
 
+/* newsletter band: spectrum rule on top, left-aligned, form kept to a readable width */
+.subscribe {
+  position: relative;
+  padding-block: clamp(3rem, 6vw, 5rem);
+  background: var(--surface-2);
+}
+.subscribe::before {                    /* full-width readiness spectrum rule */
+  content: ""; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: var(--grad);
+}
+.subscribe-form { max-width: 460px; }
+
 /* interface switcher: one engine, every interface — the same result, many surfaces */
 .switcher {
   width: 100%; max-width: 400px; margin-inline: auto;
