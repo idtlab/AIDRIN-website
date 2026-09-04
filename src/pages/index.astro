@@ -360,4 +360,14 @@ const pubLink = (d: any) => d.doi ? `https://doi.org/${d.doi}` : d.arxiv ? `http
       setInterval(() => { i = (i + 1) % screens.length; show(i); }, 2800);
     }
   }
+
+  // Newsletter: the beehiiv loader injects its iframe with no accessible name, so title it once it lands.
+  const formHost = document.querySelector(".subscribe-form");
+  if (formHost) {
+    const observer = new MutationObserver(() => {
+      const frame = formHost.querySelector("iframe:not([title])");
+      if (frame) { frame.setAttribute("title", "Newsletter signup form"); observer.disconnect(); }
+    });
+    observer.observe(formHost, { childList: true, subtree: true });
+  }
 </script>
