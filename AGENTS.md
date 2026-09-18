@@ -90,7 +90,7 @@ for *signature moments only*:
 | Reword a section lead/heading | the `Section` props in `index.astro` |
 | Add/edit a readiness dimension | `src/data/dimensions.ts` (six core have a `color`; the seventh is `crossCutting`). Update the unit test count if you change how many. |
 | Add an access mode | `src/data/access-modes.ts` (`icon` from `Icon.astro`; `agentic: true` adds the "Agent-ready" badge) |
-| Add an integration ("Built to extend") | `src/data/integrations.ts` (add a `logo` path for a real mark, else an icon) |
+| Add an extension point ("Built to extend") or integration | `src/data/integrations.ts` (`extensions` / `integrations`; add a `logo` path for a real mark, else an icon) |
 | Add a supported format | `src/data/formats.ts` (`name`, `icon`, `ext` shown only on hover). Don't list extensions inline. |
 | Add a publication | new `src/content/publications/*.md` with schema frontmatter |
 | Add/replace an acknowledgement logo | drop the file in `public/logos/`, set its path in `src/data/acknowledgements.ts` |

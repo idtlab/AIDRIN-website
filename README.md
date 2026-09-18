@@ -46,7 +46,7 @@ Nearly all copy lives in `src/data/*` so you can edit content without touching m
 3. **Dimensions** (`#dimensions`) — the seven readiness dimensions: six color-coded core
    dimensions (`src/data/dimensions.ts`) plus the cross-cutting *AI Application-Specific* band.
 4. **Capabilities** (`#capabilities`) — the six access modes (`src/data/access-modes.ts`) and a
-   "Built to extend" row of integrations (`src/data/integrations.ts`).
+   "Built to extend" row plus an "Integrations" row (`src/data/integrations.ts`).
 5. **Formats** — supported input formats as icon chips (`src/data/formats.ts`).
 6. **Get started** (`#get-started`) — install/usage tabs (`CodeTabs`).
 7. **Research** (`#research`) — publications (content collection, see below).

@@ -9,7 +9,7 @@ import { site } from "../data/site.ts";
 import { dimensions, crossCutting } from "../data/dimensions.ts";
 import { workflowSteps } from "../data/workflow.ts";
 import { accessModes } from "../data/access-modes.ts";
-import { integrations } from "../data/integrations.ts";
+import { extensions, integrations } from "../data/integrations.ts";
 import { getCollection } from "astro:content";
 const pubs = (await getCollection("publications")).sort((a, b) => b.data.year - a.data.year);
 const wfIcons = ["inspect", "remediate", "transform"];
@@ -120,7 +120,22 @@ const pubLink = (d: any) => d.doi ? `https://doi.org/${d.doi}` : d.arxiv ? `http
     </div>
 
     <p class="eyebrow mt-14 mb-5">Built to extend</p>
-    <div class="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+    <div class="grid gap-5 sm:grid-cols-2">
+      {extensions.map(it => (
+        <div class="ui-card hoverable">
+          <div class="flex items-center gap-3 mb-2">
+            {it.logo
+              ? <span class="card-icon" style="background:var(--surface);border:1px solid var(--line)"><img src={it.logo} alt={`${it.name} logo`} style="width:22px;height:22px;object-fit:contain" /></span>
+              : <span class="card-icon"><Icon name={it.icon} /></span>}
+            <h3 class="font-semibold leading-tight">{it.name}</h3>
+          </div>
+          <p class="text-muted text-sm">{it.blurb}</p>
+        </div>
+      ))}
+    </div>
+
+    <p class="eyebrow mt-14 mb-5">Integrations</p>
+    <div class="grid gap-5 sm:grid-cols-3">
       {integrations.map(it => (
         <div class="ui-card hoverable">
           <div class="flex items-center gap-3 mb-2">
@@ -143,10 +158,10 @@ const pubLink = (d: any) => d.doi ? `https://doi.org/${d.doi}` : d.arxiv ? `http
 
   <!-- 6. Get started -->
   <Section id="get-started" bg="tint" eyebrow="Get started" heading="Up and running in minutes"
-    lead="Install the Python library, drive it from the CLI, run it from source, or self-host the full web app.">
+    lead="Drive it from the CLI, use the Python library, run it from source, or self-host the full web app.">
     <CodeTabs tabs={[
+      { label: "CLI", code: "# pip install aidrin\naidrin list                       # available metrics\naidrin data-quality data.csv      # completeness, duplicity, outliers\naidrin run completeness data.csv  # a single metric", lang: "bash" },
       { label: "Library", code: "# pip install aidrin\nfrom aidrin import calculate_completeness, calculate_outliers\n\n# file_info = (path, name, type)\nfile_info = (\"data/adult.csv\", \"adult.csv\", \".csv\")\n\ncalculate_completeness(file_info)\n# {'Overall Completeness': 0.97, 'Completeness scores': {...}}\n\ncalculate_outliers(file_info)\n# {'Outlier scores': {...}}", lang: "python" },
-      { label: "CLI", code: "aidrin list                       # available metrics\naidrin data-quality data.csv      # completeness, duplicity, outliers\naidrin run completeness data.csv  # a single metric", lang: "bash" },
       { label: "From source", code: "git clone https://github.com/idtlab/AIDRIN.git\ncd AIDRIN\nconda create -n aidrin-env python=3.10 -y\nconda activate aidrin-env\npython -m pip install -e .", lang: "bash" },
       { label: "Self-Hosted Web App", code: "# 1) Redis\nredis-server --port 6379\n# 2) Celery worker\nPYTHONPATH=. celery -A worker.make_celery worker --beat --loglevel=info\n# 3) Flask app  ->  http://127.0.0.1:5000\nflask --app 'web:create_app()' run --debug", lang: "bash" },
     ]} />
