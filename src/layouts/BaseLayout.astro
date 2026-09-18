@@ -8,8 +8,8 @@ import Nav from "../components/Nav.astro";
 import Footer from "../components/Footer.astro";
 interface Props { title: string; description: string; }
 const { title, description } = Astro.props;
-const GTM_ID = "GTM-46NT97W1HM";
-const analyticsOn = import.meta.env.PROD;   // load GTM only in production builds, not in `astro dev`
+const GA_ID = "G-46NT97W1HM";
+const analyticsOn = import.meta.env.PROD;   // load GA only in production builds, not in `astro dev`
 ---
 <!doctype html>
 <html lang="en">
@@ -18,13 +18,12 @@ const analyticsOn = import.meta.env.PROD;   // load GTM only in production build
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="icon" type="image/x-icon" href="/favicon.ico" />
     {analyticsOn && (
-      <!-- Google Tag Manager -->
-      <script is:inline set:html={`(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-})(window,document,'script','dataLayer','${GTM_ID}');`} />
-      <!-- End Google Tag Manager -->
+      <!-- Google tag (gtag.js) -->
+      <script is:inline async src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`}></script>
+      <script is:inline set:html={`window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', '${GA_ID}');`} />
     )}
     <title>{title}</title>
     <meta name="description" content={description} />
@@ -36,10 +35,6 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     </script>
   </head>
   <body>
-    {analyticsOn && (
-      <!-- Google Tag Manager (noscript) -->
-      <noscript set:html={`<iframe src="https://www.googletagmanager.com/ns.html?id=${GTM_ID}" height="0" width="0" style="display:none;visibility:hidden"></iframe>`} />
-    )}
     <Nav />
     <main>
       <slot />
