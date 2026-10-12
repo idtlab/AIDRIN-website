@@ -68,6 +68,19 @@ const pubLink = (d: any) => d.doi ? `https://doi.org/${d.doi}` : d.arxiv ? `http
     </div>
   </section>
 
+  <!-- 1b. Newsletter strip: slim signup under the hero; the full band is section 9 -->
+  <section class="subscribe-strip" aria-labelledby="ss-title">
+    <div class="wrap ss-row">
+      <div>
+        <p id="ss-title" class="font-semibold">Stay up to date</p>
+        <p class="text-muted text-sm">New releases and research updates, in your inbox.</p>
+      </div>
+      <div class="subscribe-form">
+        <script is:inline async src="https://subscribe-forms.beehiiv.com/v3/loader.js" data-beehiiv-form="6f0f96a4-4552-4549-973d-792db9c77ca2"></script>
+      </div>
+    </div>
+  </section>
+
   <!-- 2. Workflow -->
   <Section bg="tint" eyebrow="How it works" heading="Inspect. Remediate. Transform."
     lead="AIDRIN is more than an assessment tool. It closes the loop from inspection to an AI-ready dataset.">
@@ -377,12 +390,11 @@ const pubLink = (d: any) => d.doi ? `https://doi.org/${d.doi}` : d.arxiv ? `http
   }
 
   // Newsletter: the beehiiv loader injects its iframe with no accessible name, so title it once it lands.
-  const formHost = document.querySelector(".subscribe-form");
-  if (formHost) {
+  document.querySelectorAll(".subscribe-form").forEach(formHost => {
     const observer = new MutationObserver(() => {
       const frame = formHost.querySelector("iframe:not([title])");
       if (frame) { frame.setAttribute("title", "Newsletter signup form"); observer.disconnect(); }
     });
     observer.observe(formHost, { childList: true, subtree: true });
-  }
+  });
 </script>

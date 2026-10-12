@@ -239,6 +239,11 @@ html.dark .ack-logo:hover { opacity: 1; }
 }
 .subscribe-form { max-width: 460px; }
 
+/* slim signup strip under the hero (the full band above still lives at the page foot) */
+.subscribe-strip { border-block: 1px solid var(--line); background: var(--surface-2); padding-block: 1.1rem; }
+.ss-row { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: .9rem 2rem; }
+.ss-row .subscribe-form { flex: 1 1 320px; }
+
 /* interface switcher: one engine, every interface — the same result, many surfaces */
 .switcher {
   width: 100%; max-width: 400px; margin-inline: auto;
