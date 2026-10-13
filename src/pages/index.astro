@@ -10,6 +10,9 @@ import { dimensions, crossCutting } from "../data/dimensions.ts";
 import { workflowSteps } from "../data/workflow.ts";
 import { accessModes } from "../data/access-modes.ts";
 import { extensions, integrations } from "../data/integrations.ts";
+import { team, collaborators } from "../data/team.ts";
+
+const surname = (name: string) => name.split(" ").pop() ?? name;
 import { getCollection } from "astro:content";
 const pubs = (await getCollection("publications")).sort((a, b) => b.data.year - a.data.year);
 const wfIcons = ["inspect", "remediate", "transform"];
@@ -194,6 +197,40 @@ const pubLink = (d: any) => d.doi ? `https://doi.org/${d.doi}` : d.arxiv ? `http
           </a>
         </li>
       ))}
+    </ul>
+  </Section>
+
+  <!-- 7b. Team -->
+  <Section id="team" bg="tint" eyebrow="Team" heading="Who builds AIDRIN"
+    lead="A joint effort to build the AI Data Readiness Infrastructure.">
+    <ul class="grid gap-5 sm:grid-cols-2 lg:grid-cols-3" data-testid="team">
+      {team.map(m => (
+        <li class="ui-card team-card">
+          {m.photo
+            ? <img src={m.photo} alt="" class="avatar" />
+            : <span class="avatar avatar-fallback" aria-hidden="true">{m.name.split(" ").map(w => w[0]).slice(0, 2).join("")}</span>}
+          <span class="min-w-0">
+            <span class="font-semibold block leading-tight">{m.name}</span>
+            <span class="text-muted text-sm block">{m.org}</span>
+            {(m.url || m.orcid || m.scholar || m.email) && (
+              <span class="icon-links">
+                {m.url && <a href={m.url} class="icon-link" aria-label={`${m.name}: website`} title="Website"><Icon name="globe" class="w-4 h-4" /></a>}
+                {m.orcid && <a href={m.orcid} class="icon-link" aria-label={`${m.name}: ORCID`} title="ORCID"><Icon name="orcid" class="w-4 h-4" /></a>}
+                {m.scholar && <a href={m.scholar} class="icon-link" aria-label={`${m.name}: Google Scholar`} title="Google Scholar"><Icon name="scholar" class="w-4 h-4" /></a>}
+                {m.email && <a href={`mailto:${m.email}`} class="icon-link" aria-label={`${m.name}: email`} title="Email"><Icon name="mail" class="w-4 h-4" /></a>}
+              </span>
+            )}
+          </span>
+        </li>
+      ))}
+    </ul>
+
+    <p class="eyebrow mt-12 mb-4">Collaborators</p>
+    <ul class="collab-list" data-testid="collaborators">
+      {[...collaborators].sort((a, b) => surname(a.name).localeCompare(surname(b.name))).map(c => {
+        const label = <><span class="collab-name">{c.name}</span>{c.org && <span class="text-muted"> · {c.org}</span>}</>;
+        return <li>{c.url ? <a href={c.url} class="collab-link">{label}</a> : label}</li>;
+      })}
     </ul>
   </Section>
 
