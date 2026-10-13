@@ -419,3 +419,29 @@ html.dark .ack-logo:hover { opacity: 1; }
   .ac-line { opacity: 1 !important; transform: none !important; }
   .ac-spark path, .ac-cursor { animation: none !important; }
 }
+
+/* team cards: photo (or initials) beside name + org */
+.team-card { display: flex; align-items: center; gap: 1rem; }
+.icon-links { display: flex; gap: .4rem; margin-top: .6rem; }
+.icon-link {
+  display: grid; place-items: center; width: 30px; height: 30px; border-radius: 8px;
+  border: 1px solid var(--line); color: var(--muted); background: var(--surface);
+  transition: border-color .15s ease, color .15s ease;
+}
+.icon-link:hover { border-color: var(--magenta); color: var(--fg); }
+.avatar {
+  width: 72px; height: 72px; flex: none; border-radius: 50%; object-fit: cover;
+  border: 1px solid var(--line); background: var(--surface-2);
+}
+.avatar-fallback {
+  display: grid; place-items: center; font-weight: 700; font-size: 1.15rem; color: var(--muted); letter-spacing: .02em;
+}
+.collab-list { display: flex; flex-wrap: wrap; gap: .5rem .6rem; }
+.collab-list li {
+  border: 1px solid var(--line); border-radius: 999px; padding: .3rem .8rem;
+  font-size: .9rem; background: var(--surface);
+}
+.collab-name { font-weight: 600; }
+.collab-list li:has(.collab-link) { padding: 0; }           /* the link owns the padding instead */
+.collab-link { display: block; padding: .3rem .8rem; border-radius: 999px; }
+.collab-list li:has(.collab-link):hover { border-color: var(--magenta); }

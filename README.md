@@ -50,7 +50,8 @@ Nearly all copy lives in `src/data/*` so you can edit content without touching m
 5. **Formats** — supported input formats as icon chips (`src/data/formats.ts`).
 6. **Get started** (`#get-started`) — install/usage tabs (`CodeTabs`).
 7. **Research** (`#research`) — publications (content collection, see below).
-8. **Closer** — the editorial CTA and the cycling **interface switcher**.
+8. **Team** (`#team`) — the five team member cards plus the collaborator chips (`src/data/team.ts`).
+9. **Closer** — the editorial CTA and the cycling **interface switcher**.
 
 Nav links (`src/data/nav.ts`) are in-page anchors to these section ids.
 
